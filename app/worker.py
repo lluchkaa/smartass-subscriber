@@ -14,11 +14,11 @@ from temporalio.common import WorkflowIDReusePolicy
 from temporalio.service import RPCError
 from temporalio.worker import Worker
 
-from smartass_subscriber.activities.calendar import fetch_sessions
-from smartass_subscriber.activities.state import already_notified, mark_notified
-from smartass_subscriber.activities.telegram import send_telegram_notification
-from smartass_subscriber.config import get_settings
-from smartass_subscriber.workflows.session_check import SessionCheckWorkflow
+from app.activities.calendar import fetch_sessions
+from app.activities.state import already_notified, mark_notified
+from app.activities.telegram import send_telegram_notification
+from app.config import get_settings
+from app.workflows.session_check import SessionCheckWorkflow
 
 SCHEDULE_ID = "smartass-session-check"
 CRON_SPEC = "* 9-21 * * FRI"

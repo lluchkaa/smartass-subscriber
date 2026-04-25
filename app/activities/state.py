@@ -5,7 +5,7 @@ from pathlib import Path
 
 from temporalio import activity
 
-from smartass_subscriber.config import get_settings
+from app.config import get_settings
 
 
 def _state_path() -> Path:

@@ -2,7 +2,7 @@ import httpx
 from bs4 import BeautifulSoup
 from temporalio import activity
 
-from smartass_subscriber.config import get_settings
+from app.config import get_settings
 
 
 @activity.defn

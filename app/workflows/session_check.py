@@ -3,9 +3,9 @@ from datetime import timedelta
 from temporalio import workflow
 
 with workflow.unsafe.imports_passed_through():
-    from smartass_subscriber.activities.calendar import fetch_sessions
-    from smartass_subscriber.activities.state import already_notified, mark_notified
-    from smartass_subscriber.activities.telegram import send_telegram_notification
+    from app.activities.calendar import fetch_sessions
+    from app.activities.state import already_notified, mark_notified
+    from app.activities.telegram import send_telegram_notification
 
 
 @workflow.defn

@@ -1,7 +1,7 @@
 from telegram import Bot
 from temporalio import activity
 
-from smartass_subscriber.config import get_settings
+from app.config import get_settings
 
 
 @activity.defn

@@ -19,4 +19,6 @@ COPY --from=builder /app/.venv /app/.venv
 
 ENV PATH="/app/.venv/bin:$PATH"
 
+EXPOSE 9090
+
 CMD ["python", "-m", "app.worker"]

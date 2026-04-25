@@ -18,6 +18,7 @@ from app.activities.calendar import fetch_sessions
 from app.activities.state import already_notified, mark_notified
 from app.activities.telegram import send_telegram_notification
 from app.config import get_settings
+from app.metrics import init_metrics
 from app.workflows.session_check import SessionCheckWorkflow
 
 SCHEDULE_ID = "smartass-session-check"
@@ -49,6 +50,7 @@ async def ensure_schedule(client: Client, settings) -> None:
 
 async def main() -> None:
     settings = get_settings()
+    init_metrics()
     client = await Client.connect(settings.temporal_host, namespace=settings.temporal_namespace)
 
     await ensure_schedule(client, settings)

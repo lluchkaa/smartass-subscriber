@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     telegram_chat_id: str
     smartass_url: str = "https://smartass.club/lviv-myrnoho/calendar"
     state_file: str = "~/.smartass_state.json"
+    metrics_port: int = 9090
 
 
 @lru_cache

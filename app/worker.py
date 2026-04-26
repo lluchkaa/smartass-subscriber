@@ -10,15 +10,15 @@ from temporalio.client import (
     ScheduleState,
     ScheduleUpdate,
 )
-from temporalio.common import WorkflowIDReusePolicy
 from temporalio.service import RPCError
 from temporalio.worker import Worker
 
 from app.activities.calendar import fetch_sessions
-from app.activities.state import already_notified, mark_notified
+from app.activities.state import already_notified, mark_notified, reset_state
 from app.activities.telegram import send_telegram_notification
 from app.config import get_settings
 from app.metrics import init_metrics
+from app.workflows.reset_state import ResetStateWorkflow
 from app.workflows.session_check import SessionCheckWorkflow
 
 SCHEDULE_ID = "smartass-session-check"
@@ -31,7 +31,6 @@ async def ensure_schedule(client: Client, settings) -> None:
             SessionCheckWorkflow.run,
             id="smartass-session-check-workflow",
             task_queue=settings.temporal_task_queue,
-            id_reuse_policy=WorkflowIDReusePolicy.ALLOW_DUPLICATE,
         ),
         spec=ScheduleSpec(cron_expressions=[CRON_SPEC]),
         policy=SchedulePolicy(overlap=ScheduleOverlapPolicy.SKIP),
@@ -58,8 +57,14 @@ async def main() -> None:
     worker = Worker(
         client,
         task_queue=settings.temporal_task_queue,
-        workflows=[SessionCheckWorkflow],
-        activities=[fetch_sessions, already_notified, mark_notified, send_telegram_notification],
+        workflows=[SessionCheckWorkflow, ResetStateWorkflow],
+        activities=[
+            fetch_sessions,
+            already_notified,
+            mark_notified,
+            reset_state,
+            send_telegram_notification,
+        ],
     )
     print(
         f"Worker started on task queue '{settings.temporal_task_queue}'"

@@ -24,6 +24,13 @@ def read_state() -> dict:
 
 
 @activity.defn
+async def reset_state() -> None:
+    path = _state_path()
+    path.unlink(missing_ok=True)
+    activity.logger.info("State reset: %s deleted", path)
+
+
+@activity.defn
 async def already_notified(date: str) -> bool:
     state = read_state()
     if state.get("last_notified") != date:

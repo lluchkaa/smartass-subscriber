@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     temporal_namespace: str = "cronjobs"
     temporal_task_queue: str = "smartass-checker"
     telegram_bot_token: str
-    telegram_chat_id: str
+    telegram_user_ids: list[str]
     smartass_url: str = "https://smartass.club/lviv-myrnoho/calendar"
     state_file: str = "~/.smartass_state.json"
     metrics_port: int = 9090

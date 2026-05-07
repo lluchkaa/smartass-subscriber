@@ -43,7 +43,7 @@ async def ensure_schedule(client: Client, settings) -> None:
                 id="SmartassSessionCheckWorkflow",
                 task_queue=settings.temporal_task_queue,
             ),
-            spec=ScheduleSpec(cron_expressions=["* 9-21 * * FRI"]),
+            spec=ScheduleSpec(cron_expressions=["* 6-18 * * FRI"]),
             policy=SchedulePolicy(overlap=ScheduleOverlapPolicy.SKIP),
             state=ScheduleState(
                 note="Checks smartass.club for Monday sessions, notifies via Telegram"

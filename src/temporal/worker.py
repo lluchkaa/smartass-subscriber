@@ -1,5 +1,8 @@
-import asyncio
-
+from app.activities.calendar import fetch_sessions
+from app.activities.state import already_notified, mark_notified, reset_state
+from app.activities.telegram import send_telegram_notification
+from app.workflows.reset_state import ResetStateWorkflow
+from app.workflows.session_check import SessionCheckWorkflow
 from temporalio.client import (
     Client,
     Schedule,
@@ -12,14 +15,6 @@ from temporalio.client import (
 )
 from temporalio.service import RPCError
 from temporalio.worker import Worker
-
-from app.activities.calendar import fetch_sessions
-from app.activities.state import already_notified, mark_notified, reset_state
-from app.activities.telegram import send_telegram_notification
-from app.config import get_settings
-from app.metrics import init_metrics
-from app.workflows.reset_state import ResetStateWorkflow
-from app.workflows.session_check import SessionCheckWorkflow
 
 SCHEDULE_ID = "smartass-session-check"
 CRON_SPEC = "* 9-21 * * FRI"
@@ -47,13 +42,7 @@ async def ensure_schedule(client: Client, settings) -> None:
         print(f"Schedule '{SCHEDULE_ID}' created")
 
 
-async def main() -> None:
-    settings = get_settings()
-    init_metrics()
-    client = await Client.connect(settings.temporal_host, namespace=settings.temporal_namespace)
-
-    await ensure_schedule(client, settings)
-
+async def run_worker(client: Client, settings) -> None:
     worker = Worker(
         client,
         task_queue=settings.temporal_task_queue,
@@ -71,7 +60,3 @@ async def main() -> None:
         f" (namespace: {settings.temporal_namespace})"
     )
     await worker.run()
-
-
-if __name__ == "__main__":
-    asyncio.run(main())

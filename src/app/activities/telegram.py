@@ -1,11 +1,12 @@
+from config import get_settings
 from telegram import Bot
 from temporalio import activity
 
-from app.config import get_settings
+from app.models import Session
 
 
 @activity.defn
-async def send_telegram_notification(sessions: list[dict]) -> None:
+async def send_telegram_notification(sessions: list[Session]) -> None:
     settings = get_settings()
     text = f"Smartass має заняття в наступний понеділок ({len(sessions)} сесій). Реєструйся!"
 

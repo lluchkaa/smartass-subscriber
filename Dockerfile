@@ -7,7 +7,7 @@ WORKDIR /app
 COPY pyproject.toml uv.lock README.md ./
 RUN uv sync --frozen --no-dev --no-install-project
 
-COPY app/ app/
+COPY src/ src/
 RUN uv sync --frozen --no-dev
 
 
@@ -19,6 +19,4 @@ COPY --from=builder /app/.venv /app/.venv
 
 ENV PATH="/app/.venv/bin:$PATH"
 
-EXPOSE 9090
-
-CMD ["python", "-m", "app.worker"]
+CMD ["python", "src/main.py"]

@@ -2,6 +2,8 @@ from datetime import timedelta
 
 from temporalio import workflow
 
+from app.dates import target_monday
+
 with workflow.unsafe.imports_passed_through():
     from app.activities.calendar import fetch_sessions
     from app.activities.state import already_notified, mark_notified
@@ -24,10 +26,7 @@ class SessionCheckWorkflow:
             workflow.logger.info("Already notified today (%s), skipping", today_str)
             return
 
-        # From Friday (weekday=4): next Monday = +3 days, Monday after next = +10 days
-        days_to_next_monday = (7 - today.weekday()) % 7 or 7
-        target = today + timedelta(days=days_to_next_monday + 7)
-        target_date = target.strftime("%Y-%m-%d")
+        target_date = target_monday(today.date()).strftime("%Y-%m-%d")
         workflow.logger.info("Checking sessions for %s", target_date)
 
         sessions = await workflow.execute_activity(

@@ -16,6 +16,7 @@ FROM python:${PYTHON_VERSION}-slim-bookworm
 WORKDIR /app
 
 COPY --from=builder /app/.venv /app/.venv
+COPY src/main.py src/main.py
 
 ENV PATH="/app/.venv/bin:$PATH"
 

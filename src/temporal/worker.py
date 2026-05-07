@@ -3,6 +3,7 @@ from app.reset_state.workflow import ResetStateWorkflow
 from app.session_check.activities import (
     already_notified,
     fetch_sessions,
+    get_target_sessions,
     mark_notified,
     send_telegram_notification,
 )
@@ -55,11 +56,12 @@ async def run_worker(client: Client, settings) -> None:
         task_queue=settings.temporal_task_queue,
         workflows=[SessionCheckWorkflow, ResetStateWorkflow],
         activities=[
-            fetch_sessions,
             already_notified,
+            fetch_sessions,
+            get_target_sessions,
+            send_telegram_notification,
             mark_notified,
             reset_state,
-            send_telegram_notification,
         ],
     )
     print(

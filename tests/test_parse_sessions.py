@@ -8,22 +8,24 @@ MOCK_HTML = (Path(__file__).parent.parent / "src/app/session_check/mocks/index.h
 WHITESPACE = "                                                                "
 
 
-def test_returns_empty_list_for_unknown_date():
-    assert parse_sessions(MOCK_HTML, "2025-01-01") == []
+def test_returns_empty_dict_for_empty_html():
+    assert parse_sessions("<html></html>") == {}
 
 
-def test_returns_empty_list_for_empty_html():
-    assert parse_sessions("<html></html>", "2026-05-07") == []
+def test_returns_all_date_panes():
+    result = parse_sessions(MOCK_HTML)
+    assert "2026-05-07" in result
+    assert "2026-05-12" in result
 
 
 def test_returns_all_sessions_for_date():
-    sessions = parse_sessions(MOCK_HTML, "2026-05-07")
-    assert len(sessions) == 28
+    result = parse_sessions(MOCK_HTML)
+    assert len(result["2026-05-07"]) == 28
 
 
 def test_first_session_fields_for_date():
-    sessions = parse_sessions(MOCK_HTML, "2026-05-07")
-    first = sessions[0]
+    result = parse_sessions(MOCK_HTML)
+    first = result["2026-05-07"][0]
     assert first.name == "Power"
     assert first.instructor == "Анна Бутурліна"
     assert first.time.startswith("07:45")
@@ -31,7 +33,8 @@ def test_first_session_fields_for_date():
 
 
 def test_returns_sessions_for_different_date():
-    sessions = parse_sessions(MOCK_HTML, "2026-05-12")
+    result = parse_sessions(MOCK_HTML)
+    sessions = result["2026-05-12"]
     assert len(sessions) == 28
     assert sessions[0] == Session(
         name="Games",
@@ -41,10 +44,10 @@ def test_returns_sessions_for_different_date():
 
 
 def test_session_names_are_non_empty():
-    sessions = parse_sessions(MOCK_HTML, "2026-05-07")
-    assert all(s.name for s in sessions)
+    result = parse_sessions(MOCK_HTML)
+    assert all(s.name for s in result["2026-05-07"])
 
 
 def test_session_instructors_are_non_empty():
-    sessions = parse_sessions(MOCK_HTML, "2026-05-07")
-    assert all(s.instructor for s in sessions)
+    result = parse_sessions(MOCK_HTML)
+    assert all(s.instructor for s in result["2026-05-07"])

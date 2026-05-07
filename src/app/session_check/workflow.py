@@ -2,12 +2,13 @@ from datetime import timedelta
 
 from temporalio import workflow
 
-from app.shared.dates import target_monday
+from app.shared.dates import target_week
 
 with workflow.unsafe.imports_passed_through():
     from app.session_check.activities import (
         already_notified,
         fetch_sessions,
+        get_target_sessions,
         mark_notified,
         send_telegram_notification,
     )
@@ -29,22 +30,27 @@ class SessionCheckWorkflow:
             workflow.logger.info("Already notified today (%s), skipping", today_str)
             return
 
-        target_date = target_monday(today.date()).strftime("%Y-%m-%d")
-        workflow.logger.info("Checking sessions for %s", target_date)
+        target_dates = [d.strftime("%Y-%m-%d") for d in target_week(today.date())]
+        workflow.logger.info("Checking sessions for %s", target_dates)
 
-        sessions = await workflow.execute_activity(
+        all_sessions = await workflow.execute_activity(
             fetch_sessions,
-            target_date,
             start_to_close_timeout=timedelta(seconds=30),
         )
 
-        if not sessions:
-            workflow.logger.info("No sessions on %s", target_date)
+        target_sessions = await workflow.execute_activity(
+            get_target_sessions,
+            (all_sessions, target_dates),
+            start_to_close_timeout=timedelta(seconds=10),
+        )
+
+        if not target_sessions:
+            workflow.logger.info("No target dates found on page: %s", target_dates)
             return
 
         await workflow.execute_activity(
             send_telegram_notification,
-            sessions,
+            target_sessions,
             start_to_close_timeout=timedelta(seconds=30),
         )
         await workflow.execute_activity(

@@ -25,7 +25,7 @@ jobs:
         run: uv sync --dev
 
       - name: Ruff lint + import sort
-        run: uv run ruff check app/
+        run: uv run ruff check src/
 
       - name: Ruff format check
-        run: uv run ruff format --check app/
+        run: uv run ruff format --check src/

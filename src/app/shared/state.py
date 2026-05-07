@@ -7,7 +7,7 @@ from pathlib import Path
 from config import get_settings
 from temporalio import activity
 
-from app.models import NotificationState
+from app.shared.models import NotificationState
 
 
 def _state_path() -> Path:

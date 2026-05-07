@@ -1,8 +1,12 @@
-from app.activities.calendar import fetch_sessions
-from app.activities.state import already_notified, mark_notified, reset_state
-from app.activities.telegram import send_telegram_notification
-from app.workflows.reset_state import ResetStateWorkflow
-from app.workflows.session_check import SessionCheckWorkflow
+from app.reset_state.activities import reset_state
+from app.reset_state.workflow import ResetStateWorkflow
+from app.session_check.activities import (
+    already_notified,
+    fetch_sessions,
+    mark_notified,
+    send_telegram_notification,
+)
+from app.session_check.workflow import SessionCheckWorkflow
 from temporalio.client import (
     Client,
     Schedule,

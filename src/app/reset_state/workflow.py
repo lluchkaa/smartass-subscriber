@@ -3,7 +3,7 @@ from datetime import timedelta
 from temporalio import workflow
 
 with workflow.unsafe.imports_passed_through():
-    from app.activities.state import reset_state
+    from app.reset_state.activities import reset_state
 
 
 @workflow.defn

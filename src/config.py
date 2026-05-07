@@ -8,7 +8,7 @@ class Settings(BaseSettings):
 
     temporal_host: str = "localhost:7233"
     temporal_namespace: str = "cronjobs"
-    temporal_task_queue: str = "smartass-checker"
+    temporal_task_queue: str = "temporal_queue"
     telegram_bot_token: str
     telegram_user_ids: list[str]
     smartass_url: str = "https://smartass.club/lviv-myrnoho/calendar"

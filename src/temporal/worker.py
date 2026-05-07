@@ -28,7 +28,7 @@ def _build_schedule(settings) -> Schedule:
     return Schedule(
         action=ScheduleActionStartWorkflow(
             SessionCheckWorkflow.run,
-            id="smartass-session-check-workflow",
+            id="SmartassSessionCheckWorkflow",
             task_queue=settings.temporal_task_queue,
         ),
         spec=ScheduleSpec(cron_expressions=[CRON_SPEC]),

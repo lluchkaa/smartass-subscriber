@@ -20,8 +20,8 @@ SCHEDULE_ID = "smartass-session-check"
 CRON_SPEC = "* 9-21 * * FRI"
 
 
-async def ensure_schedule(client: Client, settings) -> None:
-    schedule = Schedule(
+def _build_schedule(settings) -> Schedule:
+    return Schedule(
         action=ScheduleActionStartWorkflow(
             SessionCheckWorkflow.run,
             id="smartass-session-check-workflow",
@@ -32,6 +32,9 @@ async def ensure_schedule(client: Client, settings) -> None:
         state=ScheduleState(note="Checks smartass.club for Monday sessions, notifies via Telegram"),
     )
 
+
+async def ensure_schedule(client: Client, settings) -> None:
+    schedule = _build_schedule(settings)
     handle = client.get_schedule_handle(SCHEDULE_ID)
     try:
         await handle.describe()

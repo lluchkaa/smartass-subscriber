@@ -2,7 +2,7 @@ from datetime import timedelta
 
 from temporalio import workflow
 
-from app.shared.dates import target_week
+from app.shared.dates import format_date, target_week
 
 with workflow.unsafe.imports_passed_through():
     from app.session_check.activities import (
@@ -19,7 +19,9 @@ class SessionCheckWorkflow:
     @workflow.run
     async def run(self) -> None:
         today = workflow.now()
-        today_str = today.strftime("%Y-%m-%d")
+        today_str = format_date(today.date())
+        target_dates = [format_date(d) for d in target_week(today.date())]
+        workflow.logger.info("Today: %s, target dates: %s", today_str, target_dates)
 
         notified = await workflow.execute_activity(
             already_notified,
@@ -29,9 +31,6 @@ class SessionCheckWorkflow:
         if notified:
             workflow.logger.info("Already notified today (%s), skipping", today_str)
             return
-
-        target_dates = [d.strftime("%Y-%m-%d") for d in target_week(today.date())]
-        workflow.logger.info("Checking sessions for %s", target_dates)
 
         all_sessions = await workflow.execute_activity(
             fetch_sessions,

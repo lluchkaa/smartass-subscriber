@@ -55,7 +55,7 @@ async def get_target_sessions(
     args: tuple[dict[str, list[Session]], list[str]],
 ) -> dict[str, list[Session]]:
     all_sessions, target_dates = args
-    target = {date: all_sessions[date] for date in target_dates if date in all_sessions}
+    target = {date: all_sessions[date] for date in target_dates if all_sessions.get(date)}
     if not target:
         activity.logger.warning("None of the target dates %s found on page", target_dates)
     else:

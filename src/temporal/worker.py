@@ -20,7 +20,7 @@ from temporalio.client import (
 from temporalio.service import RPCError
 from temporalio.worker import Worker
 
-SCHEDULE_ID = "smartass-session-check"
+SCHEDULE_ID = "SmartassSessionCheck"
 CRON_SPEC = "* 9-21 * * FRI"
 
 

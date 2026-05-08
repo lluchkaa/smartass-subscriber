@@ -41,8 +41,9 @@ def parse_sessions(html: str) -> dict[str, list[Session]]:
 @activity.defn
 async def fetch_sessions() -> dict[str, list[Session]]:
     settings = get_settings()
+    headers = {"Cache-Control": "no-cache, no-store", "Pragma": "no-cache"}
     async with httpx.AsyncClient(timeout=20) as client:
-        response = await client.get(settings.smartass_url)
+        response = await client.get(settings.smartass_url, headers=headers)
         response.raise_for_status()
 
     all_sessions = parse_sessions(response.text)

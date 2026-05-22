@@ -59,7 +59,7 @@ async def ensure_schedule(client: Client, settings) -> None:
                 id="SmartassResetStateWorkflow",
                 task_queue=settings.temporal_task_queue,
             ),
-            spec=ScheduleSpec(cron_expressions=["0 0 * * *"]),
+            spec=ScheduleSpec(cron_expressions=["0 18 * * *"]),
             policy=SchedulePolicy(overlap=ScheduleOverlapPolicy.SKIP),
             state=ScheduleState(note="Resets smartass state daily at midnight"),
         ),

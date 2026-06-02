@@ -1,12 +1,8 @@
 name: Auto Assign PR Author
 
 on:
-  pull_request_target:
+  pull_request:
     types: [opened, reopened]
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
 
 permissions:
   pull-requests: write
@@ -14,7 +10,11 @@ permissions:
 jobs:
   assign-author-of-pr:
     runs-on: ubuntu-latest
-
+    if: github.event.pull_request.user.type != 'Bot' && github.event.pull_request.assignees[0] == null
     steps:
-      - name: Auto assign PR author
-        uses: toshimaru/auto-author-assign@v3.0.2
+      - name: Assign PR author
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR: ${{ github.event.pull_request.number }}
+          AUTHOR: ${{ github.event.pull_request.user.login }}
+        run: gh pr edit "$PR" --repo "$GITHUB_REPOSITORY" --add-assignee "$AUTHOR"

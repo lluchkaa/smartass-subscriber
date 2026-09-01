@@ -12,5 +12,5 @@ permissions:
 
 jobs:
   assign-author:
-    uses: lluchkaa/actions/.github/workflows/assign-author.yaml@main
+    uses: lluchkaa/actions/.github/workflows/assign-author.yaml@4d7c90afededfbebb3b3779e071332f7aac08e1f # main
     secrets: inherit

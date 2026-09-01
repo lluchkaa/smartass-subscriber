@@ -1,13 +1,16 @@
-name: Auto Assign PR Author
+name: Assign Author
 
 on:
   pull_request:
     types: [opened, reopened]
+  issues:
+    types: [opened, reopened]
 
 permissions:
+  issues: write
   pull-requests: write
 
 jobs:
-  assign-author-of-pr:
-    uses: lluchkaa/actions/.github/workflows/auto-assign-pr.yaml@main
+  assign-author:
+    uses: lluchkaa/actions/.github/workflows/assign-author.yaml@main
     secrets: inherit

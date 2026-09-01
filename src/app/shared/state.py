@@ -24,7 +24,7 @@ def read_state() -> NotificationState | None:
             last_notified=data["last_notified"],
             notified_at=data["notified_at"],
         )
-    except (json.JSONDecodeError, KeyError, OSError):
+    except json.JSONDecodeError, KeyError, OSError:
         return None
 
 

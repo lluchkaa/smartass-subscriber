@@ -25,7 +25,10 @@ from temporalio.worker import Worker
 async def _upsert_schedule(client: Client, schedule_id: str, schedule: Schedule) -> None:
     handle = client.get_schedule_handle(schedule_id)
     try:
-        await handle.describe()
+        desc = await handle.describe()
+        # Carry the pause over: `tctl schedule pause` has to survive a worker restart, or you
+        # cannot stop a schedule without editing code.
+        schedule.state.paused = desc.schedule.state.paused
         await handle.update(lambda _: ScheduleUpdate(schedule=schedule))
         print(f"Schedule '{schedule_id}' updated")
     except RPCError:

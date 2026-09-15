@@ -1,6 +1,6 @@
 services:
   temporal:
-    image: temporalio/temporal:latest@sha256:cea463d98a8d6def4420f903ea5c3fcd0d85c8d10fbcc2770a50c12fff2eb26d
+    image: temporalio/temporal:latest@sha256:ad4c82c97bd12b417d1ea942610dbcd511afb250c4d5ed26c694009533df447e
     command: server start-dev --ip 0.0.0.0
     ports:
       - "7233:7233"  # server
